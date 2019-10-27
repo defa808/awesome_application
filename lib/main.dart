@@ -1,8 +1,10 @@
-import 'package:awesome_application/header.dart';
+import 'package:awesome_application/walkingTab/walkingTab.dart';
 import 'package:flutter/material.dart';
-
-import 'goalCard.dart';
-import 'mainCard.dart';
+import 'headerIcon.dart';
+import 'headerNavigator.dart';
+import 'mainTab/goalCard/goalCard.dart';
+import 'mainTab/mainCard/mainCard.dart';
+import 'models/choice.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,16 +33,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -61,18 +53,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     double height = (kEffectHeight - offset / 9).clamp(0.0, kEffectHeight);
     double widthScreen = MediaQuery.of(context).size.width;
+    double heightScreen = MediaQuery.of(context).size.height + offset;
     if (height > 0)
-      textHide = Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
-        child: Container(
-          child: new Text("MI",
-              style: TextStyle(
-                color: Colors.white,
-                height: height,
-                fontSize: 16.0,
-              )),
-        ),
-      );
+      textHide = HeaderIcon(height: height);
     else
       textHide = Text("");
 
@@ -84,72 +67,18 @@ class _MyHomePageState extends State<MyHomePage> {
             expandedHeight: 220.0,
             floating: false,
             pinned: true,
-            flexibleSpace: Container(
-              padding: EdgeInsets.all(0.0),
-              width: 200,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.orange, Colors.white],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter)),
-              child: FlexibleSpaceBar(
-                  titlePadding: EdgeInsets.only(bottom: 5.0, top: 5.0),
-                  centerTitle: true,
-                  title: Container(
-                    child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        textHide,
-                        Container(
-                          constraints:
-                              BoxConstraints(maxWidth: 200.0, minWidth: 200.0),
-                          padding: EdgeInsets.only(bottom: 10.0),
-                          child: new TabBar(
-                            labelColor: Colors.orange,
-                            indicatorColor: Colors.orange,
-                            labelPadding: EdgeInsets.all(0.0),
-                            labelStyle: TextStyle(fontSize: 10.0),
-                            isScrollable: false,
-                            tabs: choices.map((Choice choice) {
-                              return Container(
-                                width: 50.0,
-                                height: 20.0,
-                                child: Tab(
-                                  text: choice.title,
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  background: Image.asset(
-                    "assets/images/header2.png",
-                    fit: BoxFit.contain,
-                  )),
-            ),
+            flexibleSpace:
+                HeaderNavigator(textHide: textHide, choices: choices),
           ),
         ];
       },
       body: Center(
           child: TabBarView(
         children: <Widget>[
+          SingleChildScrollView(child: MainTab()),
           SingleChildScrollView(
-              child: Column(children: <Widget>[
-            Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                child: MainCard()),
-            Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                child: GoalCard()),
-          ])),
-          new Icon(Icons.directions_walk),
+            child: WalkingTab(heightScreen: heightScreen),
+          ),
           new Icon(Icons.directions_run),
           new Icon(Icons.directions_bike),
         ],
@@ -180,9 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: _cIndex,
               type: BottomNavigationBarType.fixed,
-              selectedItemColor: Colors.orange,
+              selectedItemColor: Colors.deepOrange,
               unselectedIconTheme: IconThemeData(color: Colors.grey),
-              selectedIconTheme: IconThemeData(color: Colors.orange),
+              selectedIconTheme: IconThemeData(color: Colors.deepOrange),
               items: [
                 BottomNavigationBarItem(
                     icon: Icon(Icons.work), title: new Text('Workout')),
@@ -225,11 +154,29 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Choice {
-  const Choice({this.title});
-  final String title;
+class MainTab extends StatelessWidget {
+  const MainTab({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Column(children: <Widget>[
+      Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          child: MainCard()),
+      Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          child: GoalCard()),
+    ]);
+  }
 }
 
+//mode it to state
 const List<Choice> choices = const <Choice>[
   const Choice(title: 'Status'),
   const Choice(title: 'Walking'),
