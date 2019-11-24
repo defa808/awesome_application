@@ -1,17 +1,36 @@
+import 'dart:convert';
+import 'package:awesome_application/models/settings.dart';
 import 'package:awesome_application/walkingTab/walkingTab.dart';
 import 'package:flutter/material.dart';
 import 'headerIcon.dart';
 import 'headerNavigator.dart';
 import 'mainTab/goalCard/goalCard.dart';
 import 'mainTab/mainCard/mainCard.dart';
+import 'models/activityData.dart';
 import 'models/choice.dart';
+import 'package:provider/provider.dart';
+import 'models/walkingModel.dart';
+import 'package:http/http.dart' as http;
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<ActivityData>.value(notifier: ActivityData()),
+      ChangeNotifierProvider<WalkingModel>.value(notifier: WalkingModel()),
+      ChangeNotifierProvider<Settings>.value(notifier: Settings())
+    ],
+    child: MyApp(),
+  ));
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Provider.of<WalkingModel>(context, listen: false).addListener(() {
+      Provider.of<ActivityData>(context, listen: false).incrementSteps();
+    });
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -49,6 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget textHide;
   static Widget mainTab = null;
 
+  Future<void> refreshState() async {
+    await Provider.of<ActivityData>(context, listen: false).fetchData();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = (kEffectHeight - offset / 9).clamp(0.0, kEffectHeight);
@@ -75,7 +98,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
           child: TabBarView(
         children: <Widget>[
-          SingleChildScrollView(child: MainTab()),
+          RefreshIndicator(
+            child: SingleChildScrollView(child: MainTab()),
+            onRefresh: refreshState,
+          ),
           SingleChildScrollView(
             child: WalkingTab(heightScreen: heightScreen),
           ),
@@ -92,11 +118,37 @@ class _MyHomePageState extends State<MyHomePage> {
           'Friends',
         ),
       ),
-      Center(
-        child: Text(
-          'Profile',
+      Consumer<Settings>(
+        builder: (context, settingsModel, child) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
+          child: Column(
+            children: <Widget>[
+              Text("Show the main item", style: TextStyle(fontSize: 16.0)),
+              CheckboxListTile(
+                title: Text("Show Weight"),
+                value: settingsModel.showHeartRate,
+                onChanged: Provider.of<Settings>(context, listen: false)
+                    .changeShowHeartRate,
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+              CheckboxListTile(
+                title: Text("Show Weight"),
+                value: settingsModel.showWeight,
+                onChanged: Provider.of<Settings>(context, listen: false)
+                    .changeShowWeight,
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+              CheckboxListTile(
+                title: Text("Show Slept"),
+                value: settingsModel.showSlept,
+                onChanged: Provider.of<Settings>(context, listen: false)
+                    .changeShowSlept,
+                controlAffinity: ListTileControlAffinity.leading,
+              )
+            ],
+          ),
         ),
-      ),
+      )
     ];
 
     return MaterialApp(
@@ -139,6 +191,8 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     scrollController = new ScrollController();
     scrollController.addListener(updateOffset);
+
+   Provider.of<Settings>(context, listen: false).initSettings();
   }
 
   void updateOffset() {

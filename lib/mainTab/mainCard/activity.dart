@@ -1,17 +1,10 @@
+import 'package:awesome_application/models/activityData.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class Acitivity extends StatefulWidget {
-  const Acitivity({
-    Key key,
-  }) : super(key: key);
+class Activity extends StatelessWidget {
+  const Activity({Key key}) : super(key: key);
 
-  @override
-  _AcitivityState createState() => _AcitivityState();
-}
-
-
-
-class _AcitivityState extends State<Acitivity> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,15 +19,20 @@ class _AcitivityState extends State<Acitivity> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),
-                child: Text(
-                  "18712",
-                  style: TextStyle(color: Colors.deepOrange, fontSize: 40),
-                ),
+                child: Consumer<ActivityData>(
+                    builder: (context, activityData, child) => Text(
+                          '${activityData.stepsCount}',
+                          style:
+                              TextStyle(color: Colors.deepOrange, fontSize: 40),
+                        )),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 5.0),
-                child: Text("Workout: 35m Burned: 773 kcal",
-                    style: TextStyle(color: Colors.grey)),
+                child: Consumer<ActivityData>(
+                  builder: (context, activityData, child) =>
+                  Text("Workout: ${activityData.metersCount}m Burned: ${activityData.getKCal()} kcal",
+                      style: TextStyle(color: Colors.grey)), 
+                ),
               ),
               Text("Reached today's goal", style: TextStyle(color: Colors.grey))
             ],

@@ -52,7 +52,7 @@ class _MainCardState extends State<MainCard>
       padding: EdgeInsets.all(10),
       child: Column(
         children: <Widget>[
-          Acitivity(),
+          Activity(),
           Divider(),
           HealthIndicators(),
           SizeTransition(

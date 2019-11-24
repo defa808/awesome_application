@@ -72,3 +72,6 @@
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 /android
 /ios
+/api/testMiFit/.vs
+/api/testMiFit/testMiFit/bin
+/api/testMiFit/testMiFit/obj
