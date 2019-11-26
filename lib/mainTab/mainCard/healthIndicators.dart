@@ -7,38 +7,60 @@ class HealthIndicators extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+  static const List<int> hearRate = [86, 54, 64, 76, 91];
+
   @override
   Widget build(BuildContext context) {
+    int lastHeartRate = hearRate.last;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
       child: Consumer<Settings>(
         builder: (context, settingsModel, child) => Column(
           children: <Widget>[
-            (settingsModel.showHeartRate
-                ? Row(
-                    children: <Widget>[
-                      Icon(Icons.favorite, color: Colors.red, size: 30),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Heart rate: 86 BPM",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
-                          ),
-                          SizedBox(height: 3),
-                          Text(
-                            "09/30 09:52",
-                            style: TextStyle(color: Colors.grey),
-                          )
-                        ],
-                      )
-                    ],
-                  )
-                : null),
+            RawMaterialButton(
+              child: (settingsModel.showHeartRate
+                  ? Row(
+                      children: <Widget>[
+                        Icon(Icons.favorite, color: Colors.red, size: 30),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Heart rate: $lastHeartRate BPM",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                            SizedBox(height: 3),
+                            Text(
+                              "09/30 09:52",
+                              style: TextStyle(color: Colors.grey),
+                            )
+                          ],
+                        )
+                      ],
+                    )
+                  : null),
+              splashColor: Colors.red,
+              onPressed: () async {
+                final result = await Navigator.pushNamed(
+                    context, '/heartMeasure',
+                    arguments: hearRate);
+                String resultMsg = "";
+                if (result) {
+                  resultMsg = "Great hear rase.";
+                } else
+                  resultMsg = "Wake it up!";
+
+                Scaffold.of(context)
+                  ..removeCurrentSnackBar()
+                  ..showSnackBar(SnackBar(
+                      content: Text("$resultMsg"),
+                      backgroundColor: Colors.red));
+              },
+            ),
             SizedBox(
               height: 15,
             ),

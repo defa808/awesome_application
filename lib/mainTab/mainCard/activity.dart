@@ -56,11 +56,11 @@ class Activity extends StatelessWidget {
                 if (result) {
                   resultMsg = "You reached the goal";
                 } else
-                  resultMsg = "Go on you are close";
+                  resultMsg = "Go on, you are close";
 
                   Scaffold.of(context)
                     ..removeCurrentSnackBar()
-                    ..showSnackBar(SnackBar(content: Text("$resultMsg"), backgroundColor: Colors.deepOrangeAccent));
+                    ..showSnackBar(SnackBar(content: Text("$resultMsg"), backgroundColor: Colors.blue));
               },
               shape: new CircleBorder(
                   side: BorderSide(color: Colors.deepOrange, width: 8)),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_application/mainTab/mainCard/heartMeasure.dart';
 import 'package:awesome_application/models/settings.dart';
 import 'package:awesome_application/walkingTab/walkingTab.dart';
 import 'package:flutter/material.dart';
@@ -111,14 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
       )),
     );
 
-    _widgetOptions = <Widget>[
-      mainTab,
-      Center(
-        child: Text(
-          'Friends',
-        ),
-      ),
-      Consumer<Settings>(
+    Widget profileTab =  Consumer<Settings>(
         builder: (context, settingsModel, child) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
           child: Column(
@@ -148,12 +142,24 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-      )
-    ];
+      );
+   
+
+    _widgetOptions = <Widget>[
+      mainTab,
+      Center(
+        child: Text(
+          'Friends',
+        ),
+      ),
+      profileTab
+      ];
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: DefaultTabController(
+        initialRoute: "/",
+        routes: {
+          "/": (context) =>  DefaultTabController(
           length: choices.length,
           child: Scaffold(
             resizeToAvoidBottomPadding: false,
@@ -177,7 +183,10 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           ),
-        ));
+        ),
+          "/heartMeasure": (context) => HeartMeasure(),
+        }
+        );
   }
 
   void _incrementTab(index) {
@@ -192,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
     scrollController = new ScrollController();
     scrollController.addListener(updateOffset);
 
-   Provider.of<Settings>(context, listen: false).initSettings();
+    Provider.of<Settings>(context, listen: false).initSettings();
   }
 
   void updateOffset() {
