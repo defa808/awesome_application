@@ -43,96 +43,87 @@ class _HeartMeasureState extends State<HeartMeasure> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Container(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: Text("Heart Measure"),
-            )
-          ],
-        )),
-        backgroundColor: Colors.red[800],
-        elevation: 0.0,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.1, 0.5, 0.7, 0.9],
-              colors: [
-                // Colors are easy thanks to Flutter's Colors class.
-                Colors.red[800],
-                Colors.red[700],
-                Colors.red[600],
-                Colors.red[400],
-              ],
-            )),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Container(
-                      child: Text("${args.last}",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 50,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 40,
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
+    return Hero(
+          child: Scaffold(
+        appBar: AppBar(
+          leading: MaterialButton(child: Icon(Icons.arrow_back, color: Colors.white,), onPressed: () { Navigator.pop(context, args[args.length-1] > 60);},),
+          centerTitle: true,
+          title: Container(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Text("Heart Measure"),
+              )
+            ],
+          )),
+          backgroundColor: Colors.red[800],
+          elevation: 0.0,
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.1, 0.5, 0.7, 0.9],
+                colors: [
+                  // Colors are easy thanks to Flutter's Colors class.
+                  Colors.red[800],
+                  Colors.red[700],
+                  Colors.red[600],
+                  Colors.red[400],
+                ],
+              )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: historyWidgets,
-                      //
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        child: Text("${args.last}",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 50,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                    ],
                   ),
-                  Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          Navigator.pop(context, args[args.length-1] > 60);
-                        },
-                        color: Colors.red[300],
-                        child: Text(
-                          'Go back',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ))
+                  SizedBox(
+                    height: 40,
+                  )
                 ],
               ),
             ),
-          ),
-        ],
-      ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: historyWidgets,
+                        //
+                      ),
+                    ),
+                   ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ), tag: "Heart",
     );
   }
 }

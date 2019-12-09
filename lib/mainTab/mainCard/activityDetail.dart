@@ -22,6 +22,7 @@ class _ActivityDetailState extends State<ActivityDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: MaterialButton(child: Icon(Icons.arrow_back, color: Colors.white,), onPressed: () { Navigator.pop(context, widget.steps > widget.goalSteps);},),
         centerTitle: true,
         title: Container(
             child: Column(

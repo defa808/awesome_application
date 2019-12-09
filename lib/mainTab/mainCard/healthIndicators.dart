@@ -17,49 +17,51 @@ class HealthIndicators extends StatelessWidget {
       child: Consumer<Settings>(
         builder: (context, settingsModel, child) => Column(
           children: <Widget>[
-            RawMaterialButton(
-              child: (settingsModel.showHeartRate
-                  ? Row(
-                      children: <Widget>[
-                        Icon(Icons.favorite, color: Colors.red, size: 30),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "Heart rate: $lastHeartRate BPM",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            SizedBox(height: 3),
-                            Text(
-                              "09/30 09:52",
-                              style: TextStyle(color: Colors.grey),
-                            )
-                          ],
-                        )
-                      ],
-                    )
-                  : null),
-              splashColor: Colors.red,
-              onPressed: () async {
-                final result = await Navigator.pushNamed(
-                    context, '/heartMeasure',
-                    arguments: hearRate);
-                String resultMsg = "";
-                if (result) {
-                  resultMsg = "Great hear rase.";
-                } else
-                  resultMsg = "Wake it up!";
+            Hero(
+                          child: RawMaterialButton(
+                child: (settingsModel.showHeartRate
+                    ? Row(
+                        children: <Widget>[
+                          Icon(Icons.favorite, color: Colors.red, size: 30),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Heart rate: $lastHeartRate BPM",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              SizedBox(height: 3),
+                              Text(
+                                "09/30 09:52",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    : null),
+                splashColor: Colors.red,
+                onPressed: () async {
+                  final result = await Navigator.pushNamed(
+                      context, '/heartMeasure',
+                      arguments: hearRate);
+                  String resultMsg = "";
+                  if (result) {
+                    resultMsg = "Great hear rase.";
+                  } else
+                    resultMsg = "Wake it up!";
 
-                Scaffold.of(context)
-                  ..removeCurrentSnackBar()
-                  ..showSnackBar(SnackBar(
-                      content: Text("$resultMsg"),
-                      backgroundColor: Colors.red));
-              },
+                  Scaffold.of(context)
+                    ..removeCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                        content: Text("$resultMsg"),
+                        backgroundColor: Colors.red));
+                },
+              ), tag: "Heart",
             ),
             SizedBox(
               height: 15,
